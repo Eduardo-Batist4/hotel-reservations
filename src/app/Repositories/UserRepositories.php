@@ -7,6 +7,11 @@ use App\Models\User;
 
 class UserRepositories 
 {
+    public function findUser(string $email)
+    {
+        $user = User::where('email', $email)->first();
+        return $user; 
+    }
 
     public function getAllUsers()
     {

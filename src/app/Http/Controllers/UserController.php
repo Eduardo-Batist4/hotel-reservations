@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -13,12 +13,36 @@ class UserController extends Controller
     {
     }
 
+    public function login(Request $request)
+    {
+        $validateData = $request->validate([
+            'email' => 'required|email|max:255',
+            'password' => 'required|string|min:8'
+        ]);
+
+        $user = $this->userService->findUser($validateData['email']);
+
+        if(!$user || ! Hash::check($validateData['password'], $user->password)) {
+            return response()->json([
+                'error' => 'The provied credentials are incorrect.',
+            ], 400);
+        }
+
+        $token = $user->createToken('token')->plainTextToken; 
+
+        return response()->json([
+            'message' => 'Succesfully Login!',
+            'token' => $token
+        ], 201);
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return response()->json($this->userService->getUsers(), 200);
+        $users = $this->userService->getUsers();
+        return response()->json($users, 200);
     }
 
     /**
