@@ -3,18 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+    public function __construct(protected UserService $userService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $users = User::all();
-
-        return response()->json($users, 200);
+        return response()->json($this->userService->getUsers(), 200);
     }
 
     /**
@@ -22,7 +26,15 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validateData = $request->validate([
+            'name' => 'required|string|min:3|max:255',
+            'email' => 'required|email|unique:users,email|max:255',
+            'password' => 'required|string|min:8'
+        ]);
+
+        $user = $this->userService->createUser($validateData);
+
+        return response()->json($user, 201);
     }
 
     /**
@@ -30,7 +42,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return response()->json($this->userService->getUser($id));
     }
 
     /**
@@ -38,7 +50,13 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validateData = $request->validate([
+            'name' => 'required|string|min:3|max:255',
+        ]);
+
+        $updatedUser = $this->userService->updateUser($validateData, $id);
+
+        return response()->json($updatedUser, 201);
     }
 
     /**
@@ -46,6 +64,6 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        return $this->userService->deleteUser($id);
     }
 }
