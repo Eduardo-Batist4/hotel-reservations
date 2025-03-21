@@ -3,24 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hotel;
+use App\Services\HotelService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HotelController extends Controller
 {
+
+    public function __construct(protected HotelService $hotelService)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return $this->hotelService->getHotels();
     }
 
     /**
@@ -28,23 +27,23 @@ class HotelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validateData = $request->validate([
+            'name' => 'required|string|min:4|max:255',
+            'location' => 'required|string|min:8|max:255',
+            'amenities' => 'required|string|min:8|max:300'
+        ]);
+
+        $hotel = $this->hotelService->createHotel($validateData, Auth::id());
+
+        return response()->json($hotel, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Hotel $hotel)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Hotel $hotel)
-    {
-        //
+    public function show(string $id)
+    {   
+        return response()->json($this->hotelService->getHotel($id), 200);
     }
 
     /**

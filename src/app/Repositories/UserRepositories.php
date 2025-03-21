@@ -7,6 +7,12 @@ use App\Models\User;
 
 class UserRepositories 
 {
+    public function userIsAdmin($id)
+    {
+        $user = User::findOrFail($id);
+        return $user->role === 'admin';
+    }
+
     public function findUser(string $email)
     {
         $user = User::where('email', $email)->first();

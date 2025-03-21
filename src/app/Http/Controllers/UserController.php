@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -29,7 +31,6 @@ class UserController extends Controller
         }
 
         $token = $user->createToken('token')->plainTextToken; 
-
         return response()->json([
             'message' => 'Succesfully Login!',
             'token' => $token
@@ -52,10 +53,11 @@ class UserController extends Controller
     {
         $validateData = $request->validate([
             'name' => 'required|string|min:3|max:255',
+            'role' => 'sometimes|in:admin,customer',
             'email' => 'required|email|unique:users,email|max:255',
             'password' => 'required|string|min:8'
         ]);
-
+        
         $user = $this->userService->createUser($validateData);
 
         return response()->json($user, 201);
