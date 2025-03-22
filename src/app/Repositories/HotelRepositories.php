@@ -22,9 +22,20 @@ class HotelRepositories
         return Hotel::create($data);
     }
 
+    public function updateHotel(array $data, string $id)
+    {
+        $hotel = Hotel::findOrFail($id);
+        
+        $hotel->update($data);
+
+        return $hotel;
+    }
+
     public function deleteHotel(string $id)
     {
-        return Hotel::destroy($id);
+        $hotel = Hotel::findOrFail($id);
+
+        $hotel->destroy($id);
     }
 }
 

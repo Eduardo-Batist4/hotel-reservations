@@ -31,6 +31,20 @@ class HotelService
         return $this->hotelRepositories->getHotel($id);
     }
 
+    public function updateHotel(array $data, $id, $user)
+    {
+        if(!$this->userRepositories->userIsAdmin($user)) {
+            return throw new Error('No permission!', 400);
+        }
+
+        return $this->hotelRepositories->updateHotel($data, $id);
+    }
+
+    public function deleteHotel(string $id)
+    {
+        return $this->hotelRepositories->deleteHotel($id);
+    }
+
 }
 
 
