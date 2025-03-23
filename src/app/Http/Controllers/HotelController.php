@@ -52,9 +52,9 @@ class HotelController extends Controller
     public function update(Request $request, string $id)
     {
         $validateData = $request->validate([
-            'name' => 'required|string|min:4|max:255',
-            'location' => 'required|string|min:8|max:255',
-            'amenities' => 'required|string|min:8|max:300'
+            'name' => 'sometimes|string|min:4|max:255',
+            'location' => 'sometimes|string|min:8|max:255',
+            'amenities' => 'sometimes|string|min:8|max:300'
         ]);
 
         $hotel = $this->hotelService->updateHotel($validateData, $id, Auth::id());
@@ -70,7 +70,7 @@ class HotelController extends Controller
      */
     public function destroy(string $id)
     {
-        $this->hotelService->deleteHotel($id);
+        $this->hotelService->deleteHotel($id, Auth::id());
         return response()->json([
             'message' => 'Hotel successfully deleted!'
         ], 200);

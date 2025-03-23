@@ -4,14 +4,12 @@ namespace App\Services;
 
 use App\Repositories\HotelRepositories;
 use App\Repositories\UserRepositories;
-use Error;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class HotelService 
+class HotelService
 {
 
-    public function __construct(protected HotelRepositories $hotelRepositories, protected UserRepositories $userRepositories)
-    {
-    }
+    public function __construct(protected HotelRepositories $hotelRepositories, protected UserRepositories $userRepositories) {}
 
     public function getHotels()
     {
@@ -20,8 +18,8 @@ class HotelService
 
     public function createHotel(array $data, $user)
     {
-        if(!$this->userRepositories->userIsAdmin($user)) {
-            return throw new Error('No permission!', 400);
+        if (!$this->userRepositories->userIsAdmin($user)) {
+            return throw new HttpException(403, 'No permission!');
         }
         return $this->hotelRepositories->createHotel($data);
     }
@@ -33,18 +31,18 @@ class HotelService
 
     public function updateHotel(array $data, $id, $user)
     {
-        if(!$this->userRepositories->userIsAdmin($user)) {
-            return throw new Error('No permission!', 400);
+        if (!$this->userRepositories->userIsAdmin($user)) {
+            return throw new HttpException(403, 'No permission!');
         }
 
         return $this->hotelRepositories->updateHotel($data, $id);
     }
 
-    public function deleteHotel(string $id)
+    public function deleteHotel(string $id, $user)
     {
+        if (!$this->userRepositories->userIsAdmin($user)) {
+            return throw new HttpException(403, 'No permission!');
+        }
         return $this->hotelRepositories->deleteHotel($id);
     }
-
 }
-
-
