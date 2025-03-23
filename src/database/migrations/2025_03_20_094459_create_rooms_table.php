@@ -17,7 +17,7 @@ return new class extends Migration
                 ->constrained()
                 ->onDelete('cascade');
             $table->enum('room_type', ['single', 'double', 'suite']);
-            $table->boolean('available');
+            $table->boolean('available')->default(true);
             $table->timestamps();
         });
     }
