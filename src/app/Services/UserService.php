@@ -3,7 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\UserRepositories;
-use Error;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserService 
 {
@@ -17,14 +17,18 @@ class UserService
         $user = $this->userRepositories->findUser($email);
 
         if(!$user) {
-            throw new Error('not found', 400);
+            return throw new HttpException(403, 'No permission!');
         }
 
         return $user;
     }
 
-    public function getUsers()
+    public function getUsers($user)
     {
+        if(!$this->userRepositories->userIsAdmin($user)) {
+            return throw new HttpException(403, 'No permission!');
+        }
+
         return $this->userRepositories->getAllUsers();
     }
 
@@ -40,6 +44,8 @@ class UserService
 
     public function updateUser(array $data, string $id)
     {
+
+
         return $this->userRepositories->updateUser($data, $id);
     }
 

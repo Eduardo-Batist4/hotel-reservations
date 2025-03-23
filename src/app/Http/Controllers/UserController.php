@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Services\UserService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -42,7 +43,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = $this->userService->getUsers();
+        $users = $this->userService->getUsers(Auth::id());
         return response()->json($users, 200);
     }
 
