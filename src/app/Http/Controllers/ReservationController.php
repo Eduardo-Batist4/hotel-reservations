@@ -3,10 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
-use App\Models\Room;
 use App\Services\ReservationService;
-use App\Services\RoomService;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -51,7 +48,7 @@ class ReservationController extends Controller
      */
     public function show(string $id)
     {
-        return $this->reservationService->getReservation($id);
+        return $this->reservationService->getReservation($id, Auth::id());
     }
 
     /**

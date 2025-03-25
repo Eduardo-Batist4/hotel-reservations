@@ -67,7 +67,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        return response()->json($this->userService->getUser($id));
+        return response()->json($this->userService->getUser($id, Auth::id()));
     }
 
     /**
@@ -79,7 +79,7 @@ class UserController extends Controller
             'name' => 'required|string|min:3|max:255',
         ]);
 
-        $updatedUser = $this->userService->updateUser($validateData, $id);
+        $updatedUser = $this->userService->updateUser($validateData, $id, Auth::id());
 
         return response()->json($updatedUser, 201);
     }
@@ -89,6 +89,6 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        return $this->userService->deleteUser($id);
+        return $this->userService->deleteUser($id, Auth::id());
     }
 }

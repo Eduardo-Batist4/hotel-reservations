@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\ReservationRepositories;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ReservationService
@@ -17,7 +18,7 @@ class ReservationService
     
     public function getAllReservations(string $id)
     {
-        return $this->userService->getUser($id)->load('reservations');
+        return $this->userService->getUser($id, Auth::id())->load('reservations');
     }
 
     public function createReservation(array $data)
@@ -40,8 +41,14 @@ class ReservationService
         return $this->reservationRepositories->createReservation($data);
     }
 
-    public function getReservation(string $id)
+    public function getReservation(string $id, $user_id)
     {
-        return $this->reservationRepositories->getReservation($id);
+        $reservation = $this->reservationRepositories->getReservation($id);
+        
+        if($reservation->user_id !== $user_id) {
+            return throw new HttpException(403, 'Reservation not found!');
+        }
+
+        return $reservation; 
     }
 }
