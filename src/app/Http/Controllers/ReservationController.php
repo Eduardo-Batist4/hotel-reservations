@@ -3,24 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reservation;
+use App\Models\Room;
+use App\Services\ReservationService;
+use App\Services\RoomService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller
 {
+
+    public function __construct(protected ReservationService $reservationService) {}
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return $this->reservationService->getAllReservations(Auth::id());
     }
 
     /**
@@ -28,23 +28,30 @@ class ReservationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validateData = $request->validate([
+            'user_id' => 'required|numeric|min:1|exists:users,id',
+            'room_id' => 'required|numeric|min:1|exists:rooms,id',
+
+            'check_in_date' => 'required|date|after_or_equal:today',
+            'check_out_date' => 'required|date|after:check_in_date',
+
+            'total_price' => 'sometimes|numeric|min:1',
+        ]);
+
+        $reservation = $this->reservationService->createReservation($validateData);
+
+        return response()->json([
+            'message' => 'Reservation successfully',
+            'reservation' => $reservation
+        ], 200);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Reservation $reservation)
+    public function show(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Reservation $reservation)
-    {
-        //
+        return $this->reservationService->getReservation($id);
     }
 
     /**
@@ -52,7 +59,7 @@ class ReservationController extends Controller
      */
     public function update(Request $request, Reservation $reservation)
     {
-        //
+        
     }
 
     /**

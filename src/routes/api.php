@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HotelController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -18,39 +19,40 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Login
-Route::post('/login', [UserController::class, 'login']); 
+Route::post('/login', [UserController::class, 'login']);
 
 // Users
-Route::post('/users', [UserController::class, 'store']); 
-Route::get('/users/{id}', [UserController::class, 'show']);
-Route::put('/users/{id}', [UserController::class, 'update']);
-Route::delete('/users/{id}', [UserController::class, 'destroy']);
-
-// Hotels
-Route::get('/hotels', [HotelController::class, 'index']);    // **Precisa fazer filtro com preço e localização**
-Route::get('/hotels/{id}', [HotelController::class, 'show']); 
-
-// Rooms
-Route::get('/hotels/{id}/rooms', [RoomController::class, 'index']); 
-Route::get('/rooms/{id}', [RoomController::class, 'show']); 
-
-
+Route::post('/users', [UserController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    
-    // User -> (Admin)
-    Route::get('/users', [UserController::class, 'index']);
-    
-    // Hotels -> (Admin)
-    Route::post('/hotels', [HotelController::class, 'store']); 
-    Route::put('/hotels/{id}', [HotelController::class, 'update']);
-    Route::delete('/hotels/{id}', [HotelController::class, 'destroy']);
-    
-    // Room -> (Admin)
-    Route::post('/rooms', [RoomController::class, 'store']);
-    Route::put('/rooms/{id}', [RoomController::class, 'update']);
-    Route::delete('/rooms/{id}', [RoomController::class, 'destroy']);
 
+    // User 
+    Route::get('/users', [UserController::class, 'index']); // (ADMIN)
+
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+    // Hotels 
+    Route::get('/hotels', [HotelController::class, 'index']);    // **Precisa fazer filtro com preço e localização**
+    Route::get('/hotels/{id}', [HotelController::class, 'show']);
+
+    Route::post('/hotels', [HotelController::class, 'store']); // (ADMIN)
+    Route::put('/hotels/{id}', [HotelController::class, 'update']); // (ADMIN)
+    Route::delete('/hotels/{id}', [HotelController::class, 'destroy']); // (ADMIN)
+
+    // Room 
+    Route::get('/hotels/{id}/rooms', [RoomController::class, 'index']);
+    Route::get('/rooms/{id}', [RoomController::class, 'show']);
+
+    Route::post('/rooms', [RoomController::class, 'store']); // (ADMIN)
+    Route::put('/rooms/{id}', [RoomController::class, 'update']); // (ADMIN)
+    Route::delete('/rooms/{id}', [RoomController::class, 'destroy']); // (ADMIN)
+
+    // Reservation
+    Route::get('/reservations', [ReservationController::class, 'index']);
+    Route::post('/reservations', [ReservationController::class, 'store']);
+    Route::get('/reservations/{id}', [ReservationController::class, 'show']);
 
 });
 
