@@ -3,9 +3,28 @@
 namespace App\Repositories;
 
 use App\Models\Reservation;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ReservationRepositories
 {
+
+    public function findReservation(string $id) 
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        return $reservation;
+    }
+
+    public function getAllReservations(string $id)
+    {
+        $reservations = Reservation::where('user_id', $id)->get();
+
+        if (!$reservations) {
+            throw new HttpException(404, 'You are not have reservations!');
+        }
+
+        return $reservations;
+    }
 
     public function getReservation(string $id)
     {
@@ -30,5 +49,14 @@ class ReservationRepositories
     public function createReservation(array $data)
     {
         return Reservation::create($data);
+    }
+
+    public function cancelReservation(string $id)
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        $reservation->update(['status' => 'cancelled']);
+
+        return true;
     }
 }

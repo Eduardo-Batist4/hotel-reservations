@@ -54,16 +54,15 @@ class ReservationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Reservation $reservation)
+    public function update(Request $request, string $id)
     {
-        
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reservation $reservation)
+    public function destroy(string $id)
     {
-        //
+        return response()->json($this->reservationService->cancelReservation($id, Auth::id()));
     }
 }

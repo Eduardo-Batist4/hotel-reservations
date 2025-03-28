@@ -18,7 +18,7 @@ class ReservationService
     
     public function getAllReservations(string $id)
     {
-        return $this->userService->getUser($id, Auth::id())->load('reservations');
+        return $this->reservationRepositories->getAllReservations($id);
     }
 
     public function createReservation(array $data)
@@ -50,5 +50,16 @@ class ReservationService
         }
 
         return $reservation; 
+    }
+
+    public function cancelReservation($id, $user_id)
+    {
+        $reservation = $this->reservationRepositories->findReservation($id);
+
+        if($reservation->user_id != $user_id) {
+            return throw new HttpException(403, 'No permission!');
+        }
+
+        return $this->reservationRepositories->cancelReservation($id);
     }
 }
