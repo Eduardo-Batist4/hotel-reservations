@@ -11,9 +11,9 @@ class HotelService
 
     public function __construct(protected HotelRepositories $hotelRepositories, protected UserRepositories $userRepositories) {}
 
-    public function getHotels()
+    public function getHotels(array $filters)
     {
-        return $this->hotelRepositories->getAllHotels();
+        return $this->hotelRepositories->getAllHotels($filters);
     }
 
     public function createHotel(array $data, $user)

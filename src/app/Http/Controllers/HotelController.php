@@ -10,21 +10,13 @@ use Illuminate\Support\Facades\Auth;
 class HotelController extends Controller
 {
 
-    public function __construct(protected HotelService $hotelService)
+    public function __construct(protected HotelService $hotelService) {}
+
+    public function index(Request $request)
     {
+        return response()->json($this->hotelService->getHotels($request->all()));
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        return $this->hotelService->getHotels();
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $validateData = $request->validate([
@@ -38,17 +30,13 @@ class HotelController extends Controller
         return response()->json($hotel, 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
-    {   
+    {
         return response()->json($this->hotelService->getHotel($id), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
         $validateData = $request->validate([
@@ -59,20 +47,12 @@ class HotelController extends Controller
 
         $hotel = $this->hotelService->updateHotel($validateData, $id, Auth::id());
 
-        return response()->json([
-            'message' => 'Hotel successfully updated!',
-            'hotel' => $hotel
-        ], 200);
+        return response()->json($hotel, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $this->hotelService->deleteHotel($id, Auth::id());
-        return response()->json([
-            'message' => 'Hotel successfully deleted!'
-        ], 200);
+        return response()->json('Successfully deleted!', 204);
     }
 }

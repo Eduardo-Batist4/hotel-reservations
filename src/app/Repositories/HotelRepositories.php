@@ -7,9 +7,19 @@ use App\Models\Hotel;
 class HotelRepositories
 {
 
-    public function getAllHotels()
+    public function getAllHotels(array $filters)
     {
-        return Hotel::all();
+        $query = Hotel::query();
+
+        if (!empty($filters['location'])) {
+            $query->location($filters['location']);
+        }
+
+        if (!empty($filters['amenities'])) {
+            $query->amenities($filters['amenities']); 
+        }
+
+        return $query->get();
     }
 
     public function getHotel(string $id)

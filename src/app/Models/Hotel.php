@@ -19,4 +19,13 @@ class Hotel extends Model
         return $this->hasMany(Room::class);
     }
 
+    public function scopeLocation($query, $location)
+    {
+        return $query->where('location', 'like', '%' . $location . '%');
+    }
+
+    public function scopeAmenities($query, $amenities)
+    {
+        return $query->where('amenities', 'like', '%' . $amenities . '%');
+    }
 }
