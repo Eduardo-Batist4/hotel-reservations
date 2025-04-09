@@ -24,6 +24,10 @@ Route::post('/login', [UserController::class, 'login']);
 // Users
 Route::post('/users', [UserController::class, 'store']);
 
+// Hotels
+Route::get('/hotels', [HotelController::class, 'index']);    // **Precisa fazer filtro com preço e localização**
+Route::get('/hotels/{id}', [HotelController::class, 'show']);
+
 Route::middleware('auth:sanctum')->group(function () {
 
     // User 
@@ -34,9 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
     // Hotels 
-    Route::get('/hotels', [HotelController::class, 'index']);    // **Precisa fazer filtro com preço e localização**
-    Route::get('/hotels/{id}', [HotelController::class, 'show']);
-
     Route::post('/hotels', [HotelController::class, 'store']); // (ADMIN)
     Route::put('/hotels/{id}', [HotelController::class, 'update']); // (ADMIN)
     Route::delete('/hotels/{id}', [HotelController::class, 'destroy']); // (ADMIN)
