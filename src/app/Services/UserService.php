@@ -5,18 +5,16 @@ namespace App\Services;
 use App\Repositories\UserRepositories;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class UserService 
+class UserService
 {
 
-    public function __construct(protected UserRepositories $userRepositories)
-    {
-    }
+    public function __construct(protected UserRepositories $userRepositories) {}
 
     public function findUser(string $email)
     {
         $user = $this->userRepositories->findUser($email);
 
-        if(!$user) {
+        if (!$user) {
             return throw new HttpException(403, 'No permission!');
         }
 
@@ -25,7 +23,7 @@ class UserService
 
     public function getUsers($user)
     {
-        if(!$this->userRepositories->userIsAdmin($user)) {
+        if (!$this->userRepositories->userIsAdmin($user)) {
             return throw new HttpException(403, 'No permission!');
         }
 
@@ -37,21 +35,21 @@ class UserService
         return $this->userRepositories->createUser($data);
     }
 
-    public function getUser(string $id, $user_id)
+    public function getUser(int $id, $user_id)
     {
-        if($id !== $user_id) {
-            return throw new HttpException(403, "You don't have permission to get this user!");
+        if ($id !== $user_id) {
+            return throw new HttpException(403, "No permission!");
         }
 
         return $this->userRepositories->getUser($id);
     }
 
-    public function updateUser(array $data, string $id, $user_id)
+    public function updateUser(array $data, int $id, int $user_id)
     {
         $user = $this->userRepositories->getUser($user_id);
-        
-        if($user->user_id !== $user_id) {
-            return throw new HttpException(403, "You don't have permission to update this user!");
+
+        if ($user->id !== $user_id) {
+            return throw new HttpException(403, "No permission!");
         }
 
         return $this->userRepositories->updateUser($data, $id);
@@ -61,11 +59,10 @@ class UserService
     {
         $user = $this->userRepositories->getUser($user_id);
 
-        if($user->user_id !== $user_id) {
-            return throw new HttpException(403, "You don't have permission to update this user!");
+        if ($user->id !== $user_id) {
+            return throw new HttpException(403, "No permission!");
         }
 
         return $this->userRepositories->deleteUser($id);
     }
 }
-
