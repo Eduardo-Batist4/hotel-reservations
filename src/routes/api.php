@@ -25,7 +25,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/users', [UserController::class, 'store']);
 
 // Hotels
-Route::get('/hotels', [HotelController::class, 'index']);    // **Precisa fazer filtro com preço e localização**
+Route::get('/hotels', [HotelController::class, 'index']); 
 Route::get('/hotels/{id}', [HotelController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
