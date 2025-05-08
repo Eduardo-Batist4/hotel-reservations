@@ -56,7 +56,7 @@ class UserController extends Controller
 
     public function show(int $id)
     {
-        return response()->json($this->userService->getUser($id, Auth::id()), 200);
+        return response()->json($this->userService->getUser($id), 200);
     }
 
     public function update(Request $request, int $id)
@@ -66,14 +66,14 @@ class UserController extends Controller
             'email' => 'sometimes|string|email'
         ]);
 
-        $updatedUser = $this->userService->updateUser($validateData, $id, Auth::id());
+        $updatedUser = $this->userService->updateUser($validateData, $id);
 
         return response()->json($updatedUser, 201);
     }
 
     public function destroy(int $id)
     {
-        $this->userService->deleteUser($id, Auth::id());
+        $this->userService->deleteUser($id);
 
         return response()->json('Successfully deleted!', 204);
     }

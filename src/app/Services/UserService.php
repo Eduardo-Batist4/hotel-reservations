@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Repositories\UserRepositories;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserService
 {
@@ -12,21 +11,11 @@ class UserService
 
     public function findUser(string $email)
     {
-        $user = $this->userRepositories->findUser($email);
-
-        if (!$user) {
-            return throw new HttpException(403, 'No permission!');
-        }
-
-        return $user;
+        return $this->userRepositories->findUser($email);
     }
 
     public function getUsers($user)
     {
-        if (!$this->userRepositories->userIsAdmin($user)) {
-            return throw new HttpException(403, 'No permission!');
-        }
-
         return $this->userRepositories->getAllUsers();
     }
 
@@ -35,34 +24,18 @@ class UserService
         return $this->userRepositories->createUser($data);
     }
 
-    public function getUser(int $id, $user_id)
+    public function getUser(int $id)
     {
-        if ($id !== $user_id) {
-            return throw new HttpException(403, "No permission!");
-        }
-
         return $this->userRepositories->getUser($id);
     }
 
-    public function updateUser(array $data, int $id, int $user_id)
+    public function updateUser(array $data, int $id)
     {
-        $user = $this->userRepositories->getUser($user_id);
-
-        if ($user->id !== $user_id) {
-            return throw new HttpException(403, "No permission!");
-        }
-
         return $this->userRepositories->updateUser($data, $id);
     }
 
-    public function deleteUser(string $id, $user_id)
+    public function deleteUser(string $id)
     {
-        $user = $this->userRepositories->getUser($user_id);
-
-        if ($user->id !== $user_id) {
-            return throw new HttpException(403, "No permission!");
-        }
-
         return $this->userRepositories->deleteUser($id);
     }
 }
