@@ -25,41 +25,34 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/users', [UserController::class, 'store']);
 
 // Hotels
-Route::get('/hotels', [HotelController::class, 'index']); 
+Route::get('/hotels', [HotelController::class, 'index']);
 Route::get('/hotels/{id}', [HotelController::class, 'show']);
+
+// Room 
+Route::get('/hotels/{id}/rooms', [RoomController::class, 'index']);
+Route::get('/hotels/rooms/{id}', [RoomController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
 
     // User 
-    Route::get('/users', [UserController::class, 'index']); // (ADMIN)
-
+    Route::get('/users', [UserController::class, 'index'])->middleware('isAdmin');
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'update']);
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
 
     // Hotels 
-    Route::post('/hotels', [HotelController::class, 'store']); // (ADMIN)
-    Route::put('/hotels/{id}', [HotelController::class, 'update']); // (ADMIN)
-    Route::delete('/hotels/{id}', [HotelController::class, 'destroy']); // (ADMIN)
+    Route::post('/hotels', [HotelController::class, 'store'])->middleware('isAdmin');
+    Route::put('/hotels/{id}', [HotelController::class, 'update'])->middleware('isAdmin');
+    Route::delete('/hotels/{id}', [HotelController::class, 'destroy'])->middleware('isAdmin');
 
-    // Room 
-    Route::get('/hotels/{id}/rooms', [RoomController::class, 'index']);
-    Route::get('/rooms/{id}', [RoomController::class, 'show']);
-
-    Route::post('/rooms', [RoomController::class, 'store']); // (ADMIN)
-    Route::put('/rooms/{id}', [RoomController::class, 'update']); // (ADMIN)
-    Route::delete('/rooms/{id}', [RoomController::class, 'destroy']); // (ADMIN)
+    // Rooms
+    Route::post('/rooms', [RoomController::class, 'store'])->middleware('isAdmin');
+    Route::put('/rooms/{id}', [RoomController::class, 'update'])->middleware('isAdmin');
+    Route::delete('/rooms/{id}', [RoomController::class, 'destroy'])->middleware('isAdmin');
 
     // Reservation
     Route::get('/reservations', [ReservationController::class, 'index']);
     Route::post('/reservations', [ReservationController::class, 'store']);
     Route::get('/reservations/{id}', [ReservationController::class, 'show']);
     Route::put('/reservations/{id}', [ReservationController::class, 'destroy']);
-
-});
-
-
-
-Route::middleware('auth:sanctum')->get('/user/logado', function (Request $request) {
-    return $request->user();
 });
