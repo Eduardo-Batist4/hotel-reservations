@@ -17,7 +17,7 @@ class RoomController extends Controller
 
     public function index(int $id)
     {
-        return $this->roomService->getAllRooms($id);
+        return response()->json($this->roomService->getAllRooms($id), 200);
     }
 
     public function store(StoreRoomRequest $request)
@@ -46,14 +46,14 @@ class RoomController extends Controller
         return response()->json([
             'message' => 'Room successfully updated!',
             'room' => $room
-        ], 201);
+        ], 200);
     }
 
     public function destroy(string $id)
     {
         $this->roomService->deleteRoom($id);
         return response()->json([
-            'message' => 'Hotel successfully deleted!'
+            'message' => 'Room successfully deleted!'
         ], 200);
     }
 }

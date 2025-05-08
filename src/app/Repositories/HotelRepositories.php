@@ -27,7 +27,7 @@ class HotelRepositories
         return Hotel::with('rooms')->findOrFail($id);
     }
 
-    public function getHotel(string $id)
+    public function getHotel(int $id)
     {
         return Hotel::findOrFail($id);
     }
@@ -37,7 +37,7 @@ class HotelRepositories
         return Hotel::create($data);
     }
 
-    public function updateHotel(array $data, string $id)
+    public function updateHotel(array $data, int $id)
     {
         $hotel = Hotel::findOrFail($id);
         
@@ -46,7 +46,7 @@ class HotelRepositories
         return $hotel;
     }
 
-    public function deleteHotel(string $id)
+    public function deleteHotel(int $id)
     {
         $hotel = Hotel::findOrFail($id);
 

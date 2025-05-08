@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Hotel;
+use App\Http\Requests\StoreHotelRequest;
 use App\Services\HotelService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class HotelController extends Controller
 {
@@ -17,42 +16,40 @@ class HotelController extends Controller
         return response()->json($this->hotelService->getHotels($request->all()));
     }
 
-    public function store(Request $request)
+    public function store(StoreHotelRequest $request)
     {
-        $validateData = $request->validate([
-            'name' => 'required|string|min:4|max:255',
-            'location' => 'required|string|min:8|max:255',
-            'amenities' => 'required|string|min:8|max:300'
-        ]);
+        $validateData = $request->validated();
 
-        $hotel = $this->hotelService->createHotel($validateData, Auth::id());
+        $hotel = $this->hotelService->createHotel($validateData);
 
-        return response()->json($hotel, 201);
+        return response()->json([
+            'message' => 'Hotel successfully created!',
+            'hotel' => $hotel
+        ], 201);
     }
 
-
-    public function show(string $id)
+    public function show(int $id)
     {
         return response()->json($this->hotelService->getHotel($id), 200);
     }
 
-
-    public function update(Request $request, string $id)
+    public function update(StoreHotelRequest $request, int $id)
     {
-        $validateData = $request->validate([
-            'name' => 'sometimes|string|min:4|max:255',
-            'location' => 'sometimes|string|min:8|max:255',
-            'amenities' => 'sometimes|string|min:8|max:300'
-        ]);
+        $validateData = $request->validated();
 
-        $hotel = $this->hotelService->updateHotel($validateData, $id, Auth::id());
+        $hotel = $this->hotelService->updateHotel($validateData, $id);
 
-        return response()->json($hotel, 200);
+        return response()->json([
+            'message' => 'Hotel successfully update!',
+            'hotel' => $hotel
+        ], 200);
     }
 
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        $this->hotelService->deleteHotel($id, Auth::id());
-        return response()->json('Successfully deleted!', 204);
+        $this->hotelService->deleteHotel($id);
+        return response()->json([
+            'message' => 'Hotel successfully deleted!'
+        ], 200);
     }
 }

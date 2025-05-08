@@ -3,14 +3,12 @@
 namespace App\Services;
 
 use App\Repositories\RoomRepositories;
-use App\Repositories\UserRepositories;
 
 class RoomService
 {
 
     public function __construct(
         protected RoomRepositories $roomRepositories,
-        protected UserRepositories $userRepositories,
         protected HotelService $hotelService,
     ) {}
 
