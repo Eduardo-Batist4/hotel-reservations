@@ -9,18 +9,19 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class RoomService
 {
 
-    public function __construct(protected RoomRepositories $roomRepositories, protected UserRepositories $userRepositories) {}
+    public function __construct(
+        protected RoomRepositories $roomRepositories,
+        protected UserRepositories $userRepositories,
+        protected HotelService $hotelService,
+    ) {}
 
-    public function getAllRooms()
+    public function getAllRooms(int $id)
     {
-        return $this->roomRepositories->getAllRooms();
+        return $this->hotelService->getHotelWithAllRooms($id);
     }
 
-    public function createRoom(array $data, $user)
+    public function createRoom(array $data)
     {
-        if(!$this->userRepositories->userIsAdmin($user)) {
-            return throw new HttpException(403, 'No permission!');
-        }
         return $this->roomRepositories->createRoom($data);
     }
 
@@ -29,18 +30,13 @@ class RoomService
         return $this->roomRepositories->getRoom($id);
     }
 
-    public function updateRoom(array $data, $user, string $id){
-        if(!$this->userRepositories->userIsAdmin($user)) {
-            return throw new HttpException(403, 'No permission!');
-        }
+    public function updateRoom(array $data, string $id)
+    {
         return $this->roomRepositories->updateRoom($data, $id);
     }
 
-    public function deleteRoom(string $id, $user)
+    public function deleteRoom(string $id)
     {
-        if (!$this->userRepositories->userIsAdmin($user)) {
-            return throw new HttpException(403, 'No permission!');
-        }
         return $this->roomRepositories->deleteRoom($id);
     }
 }
