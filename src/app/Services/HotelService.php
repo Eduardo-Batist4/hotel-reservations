@@ -16,6 +16,11 @@ class HotelService
         return $this->hotelRepositories->getAllHotels($filters);
     }
 
+    public function getHotelWithAllRooms(int $id)
+    {
+        return $this->hotelRepositories->getHotelWithAllRooms($id);
+    }
+
     public function createHotel(array $data, $user)
     {
         if (!$this->userRepositories->userIsAdmin($user)) {

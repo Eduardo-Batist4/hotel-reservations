@@ -22,6 +22,11 @@ class HotelRepositories
         return $query->get();
     }
 
+    public function getHotelWithAllRooms(int $id)
+    {
+        return Hotel::with('rooms')->findOrFail($id);
+    }
+
     public function getHotel(string $id)
     {
         return Hotel::findOrFail($id);
