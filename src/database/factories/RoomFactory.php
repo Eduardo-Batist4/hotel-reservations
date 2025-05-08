@@ -16,10 +16,8 @@ class RoomFactory extends Factory
      */
     public function definition(): array
     {
-        static $countHotel = 1;
-
         return [
-            'hotel_id' => $countHotel++,
+            'hotel_id' => fake()->numberBetween(1, 5),
             'room_type' =>  fake()->randomElement(['single', 'double', 'suite']),
             'price' => fake()->randomFloat(2, 150, 1000),
             'available' => true
