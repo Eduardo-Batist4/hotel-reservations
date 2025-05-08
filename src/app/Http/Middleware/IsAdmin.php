@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Exceptions\AccessDeniedException;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,7 @@ class IsAdmin
         $user = Auth::user();
 
         if (!$user || $user->role !== 'admin') {
-            throw new HttpException('No permission!', 403);
+            throw new AccessDeniedException();
         }
 
         return $next($request);
