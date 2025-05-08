@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreRoomRequest;
+use App\Http\Requests\UpdateRoomRequest;
 use App\Services\HotelService;
 use App\Services\RoomService;
-use Illuminate\Http\Request;
 
 class RoomController extends Controller
 {
@@ -19,13 +20,9 @@ class RoomController extends Controller
         return $this->roomService->getAllRooms($id);
     }
 
-    public function store(Request $request)
+    public function store(StoreRoomRequest $request)
     {
-        $validateData = $request->validate([
-            'hotel_id' => 'required|exists:hotels,id',
-            'room_type' => 'required|in:single,double,suite',
-            'price' => 'required|numeric|min:1'
-        ]);
+        $validateData = $request->validated();
 
         $room = $this->roomService->createRoom($validateData);
 
@@ -40,12 +37,9 @@ class RoomController extends Controller
         return response()->json($this->roomService->getRoom($id), 200);
     }
 
-    public function update(Request $request, string $id)
+    public function update(UpdateRoomRequest $request, string $id)
     {
-        $validateData = $request->validate([
-            'room_type' => 'sometimes|in:single,double,suite',
-            'price' => 'sometimes|numeric|min:1'
-        ]);
+        $validateData = $request->validated();
 
         $room = $this->roomService->updateRoom($validateData, $id);
 

@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Repositories\RoomRepositories;
 use App\Repositories\UserRepositories;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RoomService
 {
