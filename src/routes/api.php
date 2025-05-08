@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HotelController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\RoomController;
@@ -19,10 +20,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Login
-Route::post('/login', [UserController::class, 'login']);
-
-// Users
-Route::post('/users', [UserController::class, 'store']);
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/users', [AuthController::class, 'register']);
 
 // Hotels
 Route::get('/hotels', [HotelController::class, 'index']);
