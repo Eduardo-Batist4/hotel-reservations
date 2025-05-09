@@ -12,21 +12,15 @@ class ReservationController extends Controller
 
     public function __construct(protected ReservationService $reservationService) {}
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return $this->reservationService->getAllReservations(Auth::id());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
         $validateData = $request->validate([
-            'user_id' => 'required|numeric|min:1|exists:users,id',
             'room_id' => 'required|numeric|min:1|exists:rooms,id',
 
             'check_in_date' => 'required|date|after_or_equal:today',
@@ -43,26 +37,24 @@ class ReservationController extends Controller
         ], 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(int $id)
     {
-        return $this->reservationService->getReservation($id, Auth::id());
+        return response()->json($this->reservationService->getReservation($id), 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
+    public function update(int $id) {
+        $this->reservationService->cancelReservation($id);
+        return response()->json([
+            'message' => 'Reservation successfully canceled!'
+        ], 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(int $id)
     {
-        return response()->json($this->reservationService->cancelReservation($id, Auth::id()));
+        $this->reservationService->deleteReservation($id);
+
+        return response()->json([
+            'message' => 'Reservation successfully deleted!'
+        ], 200);
     }
 }

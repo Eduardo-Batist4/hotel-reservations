@@ -34,6 +34,8 @@ class ReservationService
         
         $data['total_price'] = $totalPrice;
 
+        $data['user_id'] = Auth::id();
+
         if($this->reservationRepositories->isRoomAvailable($data['room_id'], $data['check_in_date'], $data['check_out_date'])) {
             return throw new HttpException(403, 'Room unavailable!');
         }
@@ -41,25 +43,30 @@ class ReservationService
         return $this->reservationRepositories->createReservation($data);
     }
 
-    public function getReservation(string $id, $user_id)
+    public function getReservation(string $id)
     {
         $reservation = $this->reservationRepositories->getReservation($id);
         
-        if($reservation->user_id !== $user_id) {
+        if($reservation->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
             return throw new HttpException(403, 'Reservation not found!');
         }
 
         return $reservation; 
     }
 
-    public function cancelReservation($id, $user_id)
+    public function cancelReservation($id)
     {
-        $reservation = $this->reservationRepositories->findReservation($id);
+        $reservation = $this->reservationRepositories->findReservation($id, Auth::id());
 
-        if($reservation->user_id != $user_id) {
+        if(!$reservation && Auth::user()->role !== 'admin') {
             return throw new HttpException(403, 'No permission!');
         }
 
         return $this->reservationRepositories->cancelReservation($id);
+    }
+
+    public function deleteReservation(int $id)
+    {
+        return $this->reservationRepositories->deleteReservation($id);
     }
 }

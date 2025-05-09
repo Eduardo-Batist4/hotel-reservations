@@ -8,14 +8,16 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class ReservationRepositories
 {
 
-    public function findReservation(string $id) 
+    public function findReservation(int $id, int $user_id) 
     {
-        $reservation = Reservation::findOrFail($id);
+        $reservation = Reservation::where('id', $id)
+            ->where('user_id', $user_id)
+            ->first();
 
         return $reservation;
     }
 
-    public function getAllReservations(string $id)
+    public function getAllReservations(int $id)
     {
         $reservations = Reservation::where('user_id', $id)->get();
 
@@ -26,9 +28,11 @@ class ReservationRepositories
         return $reservations;
     }
 
-    public function getReservation(string $id)
+    public function getReservation(int $id)
     {
-        return Reservation::findOrFail($id);
+        $reservation = Reservation::findOrFail($id);
+
+        return $reservation;
     }
 
     public function isRoomAvailable($roomId, $checkIn, $checkOut): bool
@@ -51,12 +55,19 @@ class ReservationRepositories
         return Reservation::create($data);
     }
 
-    public function cancelReservation(string $id)
+    public function cancelReservation(int $id)
     {
         $reservation = Reservation::findOrFail($id);
 
         $reservation->update(['status' => 'cancelled']);
 
         return true;
+    }
+
+    public function deleteReservation(int $id) 
+    {
+        $reservation =  Reservation::findOrFail($id);
+
+        $reservation->destroy($id);
     }
 }
