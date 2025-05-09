@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreReservationRequest;
 use App\Models\Reservation;
 use App\Services\ReservationService;
 use Illuminate\Http\Request;
@@ -18,16 +19,9 @@ class ReservationController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function store(StoreReservationRequest $request)
     {
-        $validateData = $request->validate([
-            'room_id' => 'required|numeric|min:1|exists:rooms,id',
-
-            'check_in_date' => 'required|date|after_or_equal:today',
-            'check_out_date' => 'required|date|after:check_in_date',
-
-            'total_price' => 'sometimes|numeric|min:1',
-        ]);
+        $validateData = $request->validated();
 
         $reservation = $this->reservationService->createReservation($validateData);
 
