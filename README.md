@@ -104,10 +104,4 @@ Senha: root
 [Ver todas as rotas](routes.md)
 
 
-## Stack utilizada
-
-**Front-end:** React, Redux, TailwindCSS
-
-**Back-end:** Node, Express
-
 
