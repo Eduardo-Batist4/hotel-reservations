@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Exceptions\AccessDeniedException;
+use App\Exceptions\NotFoundException;
+use App\Exceptions\RoomUnavailableException;
 use App\Repositories\ReservationRepositories;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ReservationService
 {
@@ -37,7 +39,7 @@ class ReservationService
         $data['user_id'] = Auth::id();
 
         if($this->reservationRepositories->isRoomAvailable($data['room_id'], $data['check_in_date'], $data['check_out_date'])) {
-            return throw new HttpException(403, 'Room unavailable!');
+            return throw new RoomUnavailableException();
         }
 
         return $this->reservationRepositories->createReservation($data);
@@ -48,7 +50,7 @@ class ReservationService
         $reservation = $this->reservationRepositories->getReservation($id);
         
         if($reservation->user_id !== Auth::id() && Auth::user()->role !== 'admin') {
-            return throw new HttpException(403, 'Reservation not found!');
+            return throw new NotFoundException();
         }
 
         return $reservation; 
@@ -59,7 +61,7 @@ class ReservationService
         $reservation = $this->reservationRepositories->findReservation($id, Auth::id());
 
         if(!$reservation && Auth::user()->role !== 'admin') {
-            return throw new HttpException(403, 'No permission!');
+            return throw new AccessDeniedException();
         }
 
         return $this->reservationRepositories->cancelReservation($id);

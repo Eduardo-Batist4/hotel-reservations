@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreReservationRequest;
-use App\Models\Reservation;
 use App\Services\ReservationService;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ReservationController extends Controller

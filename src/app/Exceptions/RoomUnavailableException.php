@@ -4,12 +4,12 @@ namespace App\Exceptions;
 
 use Exception;
 
-class AccessDeniedException extends Exception
+class RoomUnavailableException extends Exception
 {
     public function render($request)
     {
         return response()->json([
-            'error' => "Access denied! You don't have permission to access this."
+            'error' => 'Room Unavailable!'
         ], 403);
     }
 }
