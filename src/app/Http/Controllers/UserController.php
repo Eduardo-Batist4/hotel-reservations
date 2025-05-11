@@ -35,6 +35,8 @@ class UserController extends Controller
     {
         $this->userService->deleteUser($id);
 
-        return response()->json('Successfully deleted!', 204);
+        return response()->json([
+            'message' => 'User successfully deleted!'
+        ], 200);
     }
 }
